@@ -42,3 +42,7 @@ void Board::showBoard(std::ostream& o) {
         o << '\n';
     }
 }
+
+bool Board::isEmpty(Position square) const {
+    return board[square.row][square.col].getType() == PieceType::None;
+}

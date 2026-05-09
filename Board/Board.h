@@ -2,6 +2,7 @@
 #define __BOARD_H__
 #include <iostream>
 #include "../Piece/Piece.h"
+#include "../Types/Types.h"
 
 class Board
 {
@@ -10,7 +11,10 @@ private:
 public:
     Board();
     ~Board();
+
     void showBoard(std::ostream& o);
+
+    bool isEmpty(Position square) const;
 };
 
 #endif
