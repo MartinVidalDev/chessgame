@@ -195,3 +195,28 @@ bool Board::isQueenLegalMove(Move move) const {
 
     return false;
 }
+
+bool Board::isKingLegalMove(Move move) const {
+    if (board[move.from.row][move.from.col].getType() != PieceType::King)
+        throw std::invalid_argument("This piece is not a king!");
+
+    if (!isValidPositionInBoard(move.to))
+        return false;
+
+    if (move.from.row == move.to.row && move.from.col == move.to.col)
+        return false;
+
+    int rowDiff = abs(move.to.row - move.from.row);
+    int colDiff = abs(move.to.col - move.from.col);
+
+    if (rowDiff > 1 || colDiff > 1)
+        return false;
+
+    if (isEmpty(move.to))
+        return true;
+
+    if (isOpponentPiece(board[move.to.row][move.to.col], board[move.from.row][move.from.col]))
+        return true;
+
+    return false;
+}

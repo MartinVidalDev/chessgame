@@ -22,6 +22,7 @@ public:
     bool isKnightLegalMove(Move move) const;
     bool isBishopLegalMove(Move move) const;
     bool isQueenLegalMove(Move move) const;
+    bool isKingLegalMove(Move move) const;
 };
 
 #endif
