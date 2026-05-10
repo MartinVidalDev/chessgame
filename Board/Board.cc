@@ -114,3 +114,38 @@ bool Board::isKnightLegalMove(Move move) const {
 
     return false;
 }
+
+bool Board::isBishopLegalMove(Move move) const {
+    if (board[move.from.row][move.from.col].getType() != PieceType::Bishop)
+        throw std::invalid_argument("This piece is not a bishop!");
+    
+    if (!isValidPositionInBoard(move.to))
+        return false;
+
+    int rowDiff = move.to.row - move.from.row;
+    int colDiff = move.to.col - move.from.col;
+
+    if (abs(rowDiff) != abs(colDiff))
+        return false;
+
+    int rowStep = (rowDiff > 0) ? 1 : -1;
+    int colStep = (colDiff > 0) ? 1 : -1;
+
+    int r = move.from.row + rowStep;
+    int c = move.from.col + colStep;
+
+    while (r != move.to.row) {
+        if (!isEmpty({r, c}))
+            return false;
+        r = r + rowStep;
+        c = c + colStep;
+    }
+
+    if (isEmpty(move.to))
+        return true;
+
+    if (isOpponentPiece(board[move.to.row][move.to.col], board[move.from.row][move.from.col]))
+        return true;
+
+    return false;
+}
