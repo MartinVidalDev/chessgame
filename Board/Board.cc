@@ -16,8 +16,8 @@ Board::Board() {
     board[0][6] = Piece(PieceType::Knight, PieceColor::Black);
     board[0][7] = Piece(PieceType::Rook, PieceColor::Black);
 
-    for (int i = 0; i < 8; i++)
-        board[1][i] = Piece(PieceType::Pawn, PieceColor::Black);
+    // for (int i = 0; i < 8; i++)
+    //     board[1][i] = Piece(PieceType::Pawn, PieceColor::Black);
 
     for (int i = 0; i < 8; i++)
         board[6][i] = Piece(PieceType::Pawn, PieceColor::White);
@@ -139,6 +139,52 @@ bool Board::isBishopLegalMove(Move move) const {
             return false;
         r = r + rowStep;
         c = c + colStep;
+    }
+
+    if (isEmpty(move.to))
+        return true;
+
+    if (isOpponentPiece(board[move.to.row][move.to.col], board[move.from.row][move.from.col]))
+        return true;
+
+    return false;
+}
+
+bool Board::isQueenLegalMove(Move move) const {
+    if (board[move.from.row][move.from.col].getType() != PieceType::Queen)
+        throw std::invalid_argument("This piece is not a queen!");
+
+    if (!isValidPositionInBoard(move.to))
+        return false;
+
+    if (move.from.row == move.to.row && move.from.col == move.to.col)
+        return false;
+
+    int rowDiff = move.to.row - move.from.row;
+    int colDiff = move.to.col - move.from.col;
+
+    bool isStraight = (rowDiff == 0) || (colDiff == 0);
+    bool isDiagonal = abs(rowDiff) == abs(colDiff);
+
+    if (!isStraight && !isDiagonal)
+        return false;
+    
+    int rowStep = 0;
+    int colStep = 0;
+
+    if (rowDiff != 0)
+        rowStep = (rowDiff > 0) ? 1 : -1;
+    if (colDiff != 0)
+        colStep = (colDiff > 0) ? 1 : -1;
+
+    int r = move.from.row + rowStep;
+    int c = move.from.col + colStep;
+
+    while (r != move.to.row || c != move.to.col) {
+        if (!isEmpty({r, c}))
+            return false;
+        r += rowStep;
+        c += colStep;
     }
 
     if (isEmpty(move.to))
