@@ -23,6 +23,7 @@ public:
     bool isBishopLegalMove(Move move) const;
     bool isQueenLegalMove(Move move) const;
     bool isKingLegalMove(Move move) const;
+    bool isPawnLegalMove(Move move) const;
 };
 
 #endif

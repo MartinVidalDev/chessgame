@@ -220,3 +220,46 @@ bool Board::isKingLegalMove(Move move) const {
 
     return false;
 }
+
+bool Board::isPawnLegalMove(Move move) const {
+    if (board[move.from.row][move.from.col].getType() != PieceType::Pawn)
+        throw std::invalid_argument("This piece is not a pawn!");
+
+    if (!isValidPositionInBoard(move.to))
+        return false;
+
+    if (move.from.row == move.to.row && move.from.col == move.to.col)
+        return false;
+
+    PieceColor pawnColor = board[move.from.row][move.from.col].getColor();
+    int forwardDir = 1;
+
+    if (pawnColor == PieceColor::White)
+        forwardDir = -1;
+
+    int rowDiff = move.to.row - move.from.row;
+    int colDiff = move.to.col - move.from.col;
+
+    if (rowDiff == forwardDir && colDiff == 0)
+        return isEmpty(move.to);
+
+    if (rowDiff == forwardDir * 2 && colDiff == 0) {
+        int startRow = (pawnColor == PieceColor::White) ? 6 : 1;
+        if (move.from.row != startRow)
+            return false;
+
+        int intermediateRow = move.from.row + forwardDir;
+        if (!isEmpty({intermediateRow, move.from.col}))
+            return false;
+
+        return isEmpty(move.to);
+    }
+
+    if (rowDiff == forwardDir && abs(colDiff) == 1) {
+        if (isEmpty(move.to))
+            return false;
+        return isOpponentPiece(board[move.to.row][move.to.col], board[move.from.row][move.from.col]);
+    }
+
+    return false;
+}
