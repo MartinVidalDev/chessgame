@@ -48,12 +48,20 @@ bool Board::isEmpty(Position square) const {
 }
 
 bool Board::isOpponentPiece(Piece p1, Piece p2) const {
-    return p1.getColor() == p2.getColor();
+    return p1.getColor() != p2.getColor();
+}
+
+bool Board::isValidPositionInBoard(Position p) const {
+    return (p.row >= 0 && p.row <= 7) && (p.col >= 0 && p.col <= 7);
 }
 
 bool Board::isRookLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::Rook)
         throw std::invalid_argument("This piece is not a rook!");
+
+    if (!isValidPositionInBoard(move.to)) {
+        return false;
+    }
 
     if (move.from.row != move.to.row && move.from.col != move.to.col)
         return false;
@@ -75,7 +83,7 @@ bool Board::isRookLegalMove(Move move) const {
     }
 
     Piece dest = board[move.to.row][move.to.col];
-    if (!isEmpty(move.to) && isOpponentPiece(dest, board[move.from.row][move.from.col]))
+    if (!isEmpty(move.to) && !isOpponentPiece(dest, board[move.from.row][move.from.col]))
         return false;
 
     return true;
