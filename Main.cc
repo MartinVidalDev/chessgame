@@ -3,6 +3,29 @@
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
+using TextureKey = std::pair<PieceType, PieceColor>;
+
+static bool loadAllPieceTextures(std::map<TextureKey, sf::Texture>& textureMap) {
+    const PieceType pieceTypes[] = {
+        PieceType::Pawn, PieceType::Rook, PieceType::Knight,
+        PieceType::Bishop, PieceType::Queen, PieceType::King
+    };
+    const PieceColor colors[] = { PieceColor::White, PieceColor::Black };
+
+    for (PieceColor color : colors) {
+        for (PieceType type : pieceTypes) {
+            std::string path = "../Assets/Pieces/" + pieceColorToName(color) + "_" + pieceTypeToName(type) + ".png";
+            sf::Texture tex;
+            if (!tex.loadFromFile(path)) {
+                std::cerr << "Failed to load texture: " << path << '\n';
+                return false;
+            }
+            textureMap[{type, color}] = std::move(tex);
+        }
+    }
+    return true;
+}
+
 int main() {
     // Board board;
     // std::cout << "Chess game" << "\n";
