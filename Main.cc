@@ -27,41 +27,21 @@ static bool loadAllPieceTextures(std::map<TextureKey, sf::Texture>& textureMap) 
 }
 
 int main() {
-    // Board board;
-    // std::cout << "Chess game" << "\n";
-
-    // board.showBoard(std::cout);
-
-    // Move m1{{0, 0}, {0, 0}};
-    // Position pos{7,8};
-    // Move m2{{0, 1}, {0, 1}};
-    // Move m3{{0, 2}, {0, 2}};
-    // Move m4{{0, 3}, {7, 3}};
-    // Move m5{{0, 4}, {1, 4}};
-    // Move m6{{6, 0}, {5, 1}};
-
-    // std::cout << "Valid Position:" << board.isValidPositionInBoard(pos) << '\n';
-
-    // std::cout << "Rook legal move:" << board.isRookLegalMove(m1) << '\n';
-
-    // std::cout << "Knight legal move:" << board.isKnightLegalMove(m2) << '\n';
-
-    // std::cout << "Bishop legal move:" << board.isBishopLegalMove(m3) << '\n';
-
-    // std::cout << "Queen legal move:" << board.isQueenLegalMove(m4) << '\n';
-
-    // std::cout << "King legal move:" << board.isKingLegalMove(m5) << '\n';
-
-    // std::cout << "Pawn legal move:" << board.isPawnLegalMove(m6) << '\n';
-
     Board board;
+
+    std::map<TextureKey, sf::Texture> textureMap;
+    if (!loadAllPieceTextures(textureMap)) {
+        return 1;
+    }
 
     const float tile = 80.f;
     const float margin = 20.f;
 
     sf::RenderWindow window(
-        sf::VideoMode(static_cast<unsigned int>(8 * tile + 2 * margin),
-                    static_cast<unsigned int>(8 * tile + 2 * margin)),
+        sf::VideoMode(
+            static_cast<unsigned int>(8 * tile + 2 * margin),
+            static_cast<unsigned int>(8 * tile + 2 * margin)
+        ),
         "Chess"
     );
 
@@ -81,15 +61,27 @@ int main() {
             for (int col = 0; col < 8; ++col) {
                 sf::RectangleShape square(sf::Vector2f(tile, tile));
                 square.setPosition(margin + col * tile, margin + row * tile);
-
                 bool isLight = ((row + col) % 2 == 0);
                 square.setFillColor(isLight ? light : dark);
-
                 window.draw(square);
+
+                Piece piece = board.getPieceAt(row, col);
+                if (piece.getType() != PieceType::None) {
+                    TextureKey key = {piece.getType(), piece.getColor()};
+                    sf::Sprite sprite(textureMap.at(key));
+
+                    float scaleX = tile / sprite.getLocalBounds().width;
+                    float scaleY = tile / sprite.getLocalBounds().height;
+                    sprite.setScale(scaleX, scaleY);
+
+                    sprite.setPosition(margin + col * tile, margin + row * tile);
+                    window.draw(sprite);
+                }                
             }
         }
 
         window.display();
     }
+
     return 0;
 }
