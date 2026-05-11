@@ -44,3 +44,23 @@ std::ostream& operator<<(std::ostream& os, const Piece& P) {
     P.showPiece(os);
     return os;
 }
+
+std::string pieceTypeToName(PieceType type) {
+    switch (type) {
+        case PieceType::Pawn:   return "pawn";
+        case PieceType::Rook:   return "rook";
+        case PieceType::Knight: return "knight";
+        case PieceType::Bishop: return "bishop";
+        case PieceType::Queen:  return "queen";
+        case PieceType::King:   return "king";
+        default:                return "none";
+    }
+}
+
+std::string pieceColorToName(PieceColor color) {
+    switch (color) {
+        case PieceColor::White: return "w";
+        case PieceColor::Black: return "b";
+        default:                return "none";
+    }
+}

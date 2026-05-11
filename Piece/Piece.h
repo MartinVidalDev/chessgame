@@ -35,5 +35,7 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const Piece& P);
+std::string pieceTypeToName(PieceType type);
+std::string pieceColorToName(PieceColor color);
 
 #endif
