@@ -16,8 +16,8 @@ Board::Board() {
     board[0][6] = Piece(PieceType::Knight, PieceColor::Black);
     board[0][7] = Piece(PieceType::Rook, PieceColor::Black);
 
-    // for (int i = 0; i < 8; i++)
-    //     board[1][i] = Piece(PieceType::Pawn, PieceColor::Black);
+    for (int i = 0; i < 8; i++)
+        board[1][i] = Piece(PieceType::Pawn, PieceColor::Black);
 
     for (int i = 0; i < 8; i++)
         board[6][i] = Piece(PieceType::Pawn, PieceColor::White);
@@ -53,6 +53,10 @@ bool Board::isOpponentPiece(Piece p1, Piece p2) const {
 
 bool Board::isValidPositionInBoard(Position p) const {
     return (p.row >= 0 && p.row <= 7) && (p.col >= 0 && p.col <= 7);
+}
+
+Piece Board::getPieceAt(int row, int col) const {
+    return board[row][col];
 }
 
 bool Board::isRookLegalMove(Move move) const {

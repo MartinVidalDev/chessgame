@@ -17,6 +17,7 @@ public:
     bool isEmpty(Position square) const;
     bool isOpponentPiece(Piece p1, Piece p2) const;
     bool isValidPositionInBoard(Position p) const;
+    Piece getPieceAt(int row, int col) const;
 
     bool isRookLegalMove(Move move) const;
     bool isKnightLegalMove(Move move) const;
