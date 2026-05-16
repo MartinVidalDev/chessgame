@@ -469,3 +469,15 @@ void Board::makeMove(Move move) {
     board[move.to.row][move.to.col] = moving;
     board[move.from.row][move.from.col] = Piece();
 }
+
+bool Board::canPromoteAt(Position square) const {
+    if (!isValidPositionInBoard(square))
+        return false;
+
+    Piece piece = board[square.row][square.col];
+    if (piece.getType() != PieceType::Pawn)
+        return false;
+
+    return (piece.getColor() == PieceColor::White && square.row == 0) ||
+           (piece.getColor() == PieceColor::Black && square.row == 7);
+}

@@ -32,6 +32,7 @@ public:
 
     bool isLegalMove(Move move) const;
     void makeMove(Move move);
+    bool canPromoteAt(Position square) const;
 };
 
 #endif
