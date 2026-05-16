@@ -514,3 +514,23 @@ bool Board::isInCheck(PieceColor color) const {
     PieceColor opponent = (color == PieceColor::White) ? PieceColor::Black : PieceColor::White;
     return isSquareUnderAttack(kingPos, opponent);
 }
+
+bool Board::hasAnyLegalMove(PieceColor color) const {
+    for (int fromRow = 0; fromRow < 8; ++fromRow) {
+        for (int fromCol = 0; fromCol < 8; ++fromCol) {
+            Piece piece = board[fromRow][fromCol];
+            if (piece.getColor() != color)
+                continue;
+
+            for (int toRow = 0; toRow < 8; ++toRow) {
+                for (int toCol = 0; toCol < 8; ++toCol) {
+                    Move move{{fromRow, fromCol}, {toRow, toCol}};
+                    if (isLegalMove(move))
+                        return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}

@@ -35,6 +35,7 @@ public:
     bool canPromoteAt(Position square) const;
     bool promotePawn(Position square, PieceType newType);
     bool isInCheck(PieceColor color) const;
+    bool hasAnyLegalMove(PieceColor color) const;
 };
 
 #endif
