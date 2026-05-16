@@ -470,32 +470,6 @@ void Board::makeMove(Move move) {
     board[move.from.row][move.from.col] = Piece();
 }
 
-bool Board::canPromoteAt(Position square) const {
-    if (!isValidPositionInBoard(square))
-        return false;
-
-    Piece piece = board[square.row][square.col];
-    if (piece.getType() != PieceType::Pawn)
-        return false;
-
-    return (piece.getColor() == PieceColor::White && square.row == 0) ||
-           (piece.getColor() == PieceColor::Black && square.row == 7);
-}
-
-bool Board::promotePawn(Position square, PieceType newType) {
-    if (!canPromoteAt(square))
-        return false;
-
-    if (newType != PieceType::Queen && newType != PieceType::Rook &&
-        newType != PieceType::Bishop && newType != PieceType::Knight) {
-        return false;
-    }
-
-    PieceColor color = board[square.row][square.col].getColor();
-    board[square.row][square.col] = Piece(newType, color, true);
-    return true;
-}
-
 bool Board::isInCheck(PieceColor color) const {
     Position kingPos{-1, -1};
 
@@ -533,4 +507,12 @@ bool Board::hasAnyLegalMove(PieceColor color) const {
     }
 
     return false;
+}
+
+bool Board::isCheckmate(PieceColor color) const {
+    return isInCheck(color) && !hasAnyLegalMove(color);
+}
+
+bool Board::isStalemate(PieceColor color) const {
+    return !isInCheck(color) && !hasAnyLegalMove(color);
 }
