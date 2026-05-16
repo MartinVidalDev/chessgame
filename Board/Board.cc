@@ -440,3 +440,32 @@ bool Board::isLegalMove(Move move) const {
 
     return true;
 }
+
+void Board::makeMove(Move move) {
+    if (!isLegalMove(move))
+        return;
+
+    Piece moving = board[move.from.row][move.from.col];
+    moving.setMoved(true);
+
+    if (isCastlingMove(move)) {
+        int row = move.from.row;
+        bool kingSide = (move.to.col == 6);
+
+        int rookFromCol = kingSide ? 7 : 0;
+        int rookToCol = kingSide ? 5 : 3;
+
+        Piece rook = board[row][rookFromCol];
+        rook.setMoved(true);
+
+        board[move.to.row][move.to.col] = moving;
+        board[move.from.row][move.from.col] = Piece();
+
+        board[row][rookToCol] = rook;
+        board[row][rookFromCol] = Piece();
+        return;
+    }
+
+    board[move.to.row][move.to.col] = moving;
+    board[move.from.row][move.from.col] = Piece();
+}

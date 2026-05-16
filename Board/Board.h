@@ -31,6 +31,7 @@ public:
     bool isPawnLegalMove(Move move) const;
 
     bool isLegalMove(Move move) const;
+    void makeMove(Move move);
 };
 
 #endif
