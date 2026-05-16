@@ -273,3 +273,93 @@ bool Board::isPseudoLegalMove(Move move) const {
             return false;
     }
 }
+
+bool Board::isSquareUnderAttack(Position square, PieceColor byColor) const {
+    if (!isValidPositionInBoard(square))
+        return false;
+
+    int knightOffsets[8][2] = {
+        {-2, -1}, {-2, 1}, {-1, -2}, {-1, 2},
+        {1, -2}, {1, 2}, {2, -1}, {2, 1}
+    };
+
+    for (const auto& offset : knightOffsets) {
+        int r = square.row + offset[0];
+        int c = square.col + offset[1];
+        Position p{r, c};
+        if (!isValidPositionInBoard(p))
+            continue;
+
+        Piece piece = board[r][c];
+        if (piece.getColor() == byColor && piece.getType() == PieceType::Knight)
+            return true;
+    }
+
+    int kingOffsets[8][2] = {
+        {-1, -1}, {-1, 0}, {-1, 1},
+        {0, -1},           {0, 1},
+        {1, -1},  {1, 0},  {1, 1}
+    };
+
+    for (const auto& offset : kingOffsets) {
+        int r = square.row + offset[0];
+        int c = square.col + offset[1];
+        Position p{r, c};
+        if (!isValidPositionInBoard(p))
+            continue;
+
+        Piece piece = board[r][c];
+        if (piece.getColor() == byColor && piece.getType() == PieceType::King)
+            return true;
+    }
+
+    int pawnRow = square.row + ((byColor == PieceColor::White) ? 1 : -1);
+    int pawnCols[2] = {square.col - 1, square.col + 1};
+    for (int pawnCol : pawnCols) {
+        Position p{pawnRow, pawnCol};
+        if (!isValidPositionInBoard(p))
+            continue;
+
+        Piece piece = board[pawnRow][pawnCol];
+        if (piece.getColor() == byColor && piece.getType() == PieceType::Pawn)
+            return true;
+    }
+
+    int rookDirs[4][2] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    for (const auto& dir : rookDirs) {
+        int r = square.row + dir[0];
+        int c = square.col + dir[1];
+        while (isValidPositionInBoard({r, c})) {
+            Piece piece = board[r][c];
+            if (piece.getType() != PieceType::None) {
+                if (piece.getColor() == byColor &&
+                    (piece.getType() == PieceType::Rook || piece.getType() == PieceType::Queen)) {
+                    return true;
+                }
+                break;
+            }
+            r += dir[0];
+            c += dir[1];
+        }
+    }
+
+    int bishopDirs[4][2] = {{-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
+    for (const auto& dir : bishopDirs) {
+        int r = square.row + dir[0];
+        int c = square.col + dir[1];
+        while (isValidPositionInBoard({r, c})) {
+            Piece piece = board[r][c];
+            if (piece.getType() != PieceType::None) {
+                if (piece.getColor() == byColor &&
+                    (piece.getType() == PieceType::Bishop || piece.getType() == PieceType::Queen)) {
+                    return true;
+                }
+                break;
+            }
+            r += dir[0];
+            c += dir[1];
+        }
+    }
+
+    return false;
+}

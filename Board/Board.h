@@ -10,6 +10,7 @@ private:
     Piece board[8][8];
 
     bool isPseudoLegalMove(Move move) const;
+    bool isSquareUnderAttack(Position square, PieceColor byColor) const;
 public:
     Board();
     ~Board();
