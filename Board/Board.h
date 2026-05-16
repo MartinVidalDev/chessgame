@@ -11,6 +11,7 @@ private:
 
     bool isPseudoLegalMove(Move move) const;
     bool isSquareUnderAttack(Position square, PieceColor byColor) const;
+    bool isCastlingMove(Move move) const;
 public:
     Board();
     ~Board();

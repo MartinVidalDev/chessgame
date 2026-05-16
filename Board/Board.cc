@@ -363,3 +363,13 @@ bool Board::isSquareUnderAttack(Position square, PieceColor byColor) const {
 
     return false;
 }
+
+bool Board::isCastlingMove(Move move) const {
+    if (!isValidPositionInBoard(move.from) || !isValidPositionInBoard(move.to))
+        return false;
+
+    Piece piece = board[move.from.row][move.from.col];
+    return piece.getType() == PieceType::King &&
+           move.from.row == move.to.row &&
+           abs(move.to.col - move.from.col) == 2;
+}
