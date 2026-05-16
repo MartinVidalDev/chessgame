@@ -481,3 +481,17 @@ bool Board::canPromoteAt(Position square) const {
     return (piece.getColor() == PieceColor::White && square.row == 0) ||
            (piece.getColor() == PieceColor::Black && square.row == 7);
 }
+
+bool Board::promotePawn(Position square, PieceType newType) {
+    if (!canPromoteAt(square))
+        return false;
+
+    if (newType != PieceType::Queen && newType != PieceType::Rook &&
+        newType != PieceType::Bishop && newType != PieceType::Knight) {
+        return false;
+    }
+
+    PieceColor color = board[square.row][square.col].getColor();
+    board[square.row][square.col] = Piece(newType, color, true);
+    return true;
+}

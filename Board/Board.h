@@ -33,6 +33,7 @@ public:
     bool isLegalMove(Move move) const;
     void makeMove(Move move);
     bool canPromoteAt(Position square) const;
+    bool promotePawn(Position square, PieceType newType);
 };
 
 #endif
