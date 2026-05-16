@@ -63,10 +63,6 @@ bool Board::isRookLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::Rook)
         throw std::invalid_argument("This piece is not a rook!");
 
-    if (!isValidPositionInBoard(move.to)) {
-        return false;
-    }
-
     if (move.from.row != move.to.row && move.from.col != move.to.col)
         return false;
 
@@ -97,10 +93,6 @@ bool Board::isKnightLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::Knight)
         throw std::invalid_argument("This piece is not a knight!");
 
-    if (!isValidPositionInBoard(move.to)) {
-        return false;
-    }
-
     int rowDiff = abs(move.to.row - move.from.row);
     int colDiff = abs(move.to.col - move.from.col);
 
@@ -122,9 +114,6 @@ bool Board::isKnightLegalMove(Move move) const {
 bool Board::isBishopLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::Bishop)
         throw std::invalid_argument("This piece is not a bishop!");
-    
-    if (!isValidPositionInBoard(move.to))
-        return false;
 
     int rowDiff = move.to.row - move.from.row;
     int colDiff = move.to.col - move.from.col;
@@ -157,9 +146,6 @@ bool Board::isBishopLegalMove(Move move) const {
 bool Board::isQueenLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::Queen)
         throw std::invalid_argument("This piece is not a queen!");
-
-    if (!isValidPositionInBoard(move.to))
-        return false;
 
     if (move.from.row == move.to.row && move.from.col == move.to.col)
         return false;
@@ -204,9 +190,6 @@ bool Board::isKingLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::King)
         throw std::invalid_argument("This piece is not a king!");
 
-    if (!isValidPositionInBoard(move.to))
-        return false;
-
     if (move.from.row == move.to.row && move.from.col == move.to.col)
         return false;
 
@@ -228,9 +211,6 @@ bool Board::isKingLegalMove(Move move) const {
 bool Board::isPawnLegalMove(Move move) const {
     if (board[move.from.row][move.from.col].getType() != PieceType::Pawn)
         throw std::invalid_argument("This piece is not a pawn!");
-
-    if (!isValidPositionInBoard(move.to))
-        return false;
 
     if (move.from.row == move.to.row && move.from.col == move.to.col)
         return false;
@@ -266,4 +246,38 @@ bool Board::isPawnLegalMove(Move move) const {
     }
 
     return false;
+}
+
+bool Board::isLegalMove(Move move) const {
+    if (isEmpty(move.from))
+        return false;
+
+    if (!isValidPositionInBoard(move.to))
+        return false;
+
+    switch (board[move.from.row][move.from.col].getType())
+    {
+        case PieceType::Rook:
+            return isRookLegalMove(move);
+        case PieceType::Knight:
+            return isKnightLegalMove(move);
+        case PieceType::Bishop:
+            return isBishopLegalMove(move);
+        case PieceType::Queen:
+            return isQueenLegalMove(move);
+        case PieceType::King:
+            return isKingLegalMove(move);
+        case PieceType::Pawn:
+            return isPawnLegalMove(move);
+        default:
+            return false;
+    }
+}
+
+void Board::makeMove(Move move) {
+    if (!isLegalMove(move))
+        return;
+
+    board[move.to.row][move.to.col] = board[move.from.row][move.from.col];
+    board[move.from.row][move.from.col] = Piece();
 }
