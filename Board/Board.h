@@ -29,6 +29,8 @@ public:
     bool isQueenLegalMove(Move move) const;
     bool isKingLegalMove(Move move) const;
     bool isPawnLegalMove(Move move) const;
+
+    bool isLegalMove(Move move) const;
 };
 
 #endif

@@ -373,3 +373,70 @@ bool Board::isCastlingMove(Move move) const {
            move.from.row == move.to.row &&
            abs(move.to.col - move.from.col) == 2;
 }
+
+bool Board::isLegalMove(Move move) const {
+    if (!isValidPositionInBoard(move.from) || !isValidPositionInBoard(move.to))
+        return false;
+
+    if (move.from.row == move.to.row && move.from.col == move.to.col)
+        return false;
+
+    if (isEmpty(move.from))
+        return false;
+
+    Piece mover = board[move.from.row][move.from.col];
+    PieceColor moverColor = mover.getColor();
+
+    if (isCastlingMove(move)) {
+        PieceColor opponent = (moverColor == PieceColor::White) ? PieceColor::Black : PieceColor::White;
+        int homeRow = (moverColor == PieceColor::White) ? 7 : 0;
+
+        if (move.from.row != homeRow || move.from.col != 4)
+            return false;
+
+        bool kingSide = (move.to.col == 6);
+        bool queenSide = (move.to.col == 2);
+        if (!kingSide && !queenSide)
+            return false;
+
+        if (mover.hasMoved())
+            return false;
+
+        int rookCol = kingSide ? 7 : 0;
+        Piece rook = board[homeRow][rookCol];
+        if (rook.getType() != PieceType::Rook || rook.getColor() != moverColor)
+            return false;
+
+        if (rook.hasMoved())
+            return false;
+
+        if (kingSide) {
+            if (!isEmpty({homeRow, 5}) || !isEmpty({homeRow, 6}))
+                return false;
+        } else {
+            if (!isEmpty({homeRow, 1}) || !isEmpty({homeRow, 2}) || !isEmpty({homeRow, 3}))
+                return false;
+        }
+
+        int throughCol = kingSide ? 5 : 3;
+        if (isSquareUnderAttack({homeRow, 4}, opponent) ||
+            isSquareUnderAttack({homeRow, throughCol}, opponent) ||
+            isSquareUnderAttack({homeRow, move.to.col}, opponent)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    if (!isPseudoLegalMove(move))
+        return false;
+
+    Board simulated = *this;
+    simulated.board[move.to.row][move.to.col] = simulated.board[move.from.row][move.from.col];
+    simulated.board[move.from.row][move.from.col] = Piece();
+
+    if (simulated.isInCheck(moverColor))
+        return false;
+
+    return true;
+}
