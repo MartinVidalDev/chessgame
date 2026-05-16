@@ -8,6 +8,8 @@ class Board
 {
 private:
     Piece board[8][8];
+
+    bool isPseudoLegalMove(Move move) const;
 public:
     Board();
     ~Board();
@@ -25,9 +27,6 @@ public:
     bool isQueenLegalMove(Move move) const;
     bool isKingLegalMove(Move move) const;
     bool isPawnLegalMove(Move move) const;
-
-    bool isLegalMove(Move move) const;
-    void makeMove(Move move);
 };
 
 #endif

@@ -248,11 +248,11 @@ bool Board::isPawnLegalMove(Move move) const {
     return false;
 }
 
-bool Board::isLegalMove(Move move) const {
-    if (isEmpty(move.from))
+bool Board::isPseudoLegalMove(Move move) const {
+    if (!isValidPositionInBoard(move.from) || !isValidPositionInBoard(move.to))
         return false;
 
-    if (!isValidPositionInBoard(move.to))
+    if (isEmpty(move.from))
         return false;
 
     switch (board[move.from.row][move.from.col].getType())
@@ -272,12 +272,4 @@ bool Board::isLegalMove(Move move) const {
         default:
             return false;
     }
-}
-
-void Board::makeMove(Move move) {
-    if (!isLegalMove(move))
-        return;
-
-    board[move.to.row][move.to.col] = board[move.from.row][move.from.col];
-    board[move.from.row][move.from.col] = Piece();
 }
