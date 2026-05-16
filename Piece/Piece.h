@@ -23,13 +23,16 @@ class Piece
 private:
     PieceType type;
     PieceColor color;
+    bool moved;
 public:
     Piece();
-    Piece(PieceType t, PieceColor c);
+    Piece(PieceType t, PieceColor c, bool hasMoved = false);
     ~Piece();
     
     PieceType getType() const;
     PieceColor getColor() const;
+    bool hasMoved() const;
+    void setMoved(bool hasMoved = true);
 
     void showPiece(std::ostream& o) const;
 };

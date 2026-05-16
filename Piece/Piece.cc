@@ -1,8 +1,8 @@
 #include "Piece.h"
 
-Piece::Piece() : type(PieceType::None), color(PieceColor::None) {}
+Piece::Piece() : type(PieceType::None), color(PieceColor::None), moved(false) {}
 
-Piece::Piece(PieceType t, PieceColor c) : type(t), color(c) {}
+Piece::Piece(PieceType t, PieceColor c, bool hasMoved) : type(t), color(c), moved(hasMoved) {}
 
 Piece::~Piece() {}
 
@@ -11,6 +11,14 @@ PieceType Piece::getType() const {
 }
 PieceColor Piece::getColor() const {
     return color;
+}
+
+bool Piece::hasMoved() const {
+    return moved;
+}
+
+void Piece::setMoved(bool hasMoved) {
+    moved = hasMoved;
 }
 
 void Piece::showPiece(std::ostream& o) const {
