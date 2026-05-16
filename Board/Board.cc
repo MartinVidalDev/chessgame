@@ -495,3 +495,22 @@ bool Board::promotePawn(Position square, PieceType newType) {
     board[square.row][square.col] = Piece(newType, color, true);
     return true;
 }
+
+bool Board::isInCheck(PieceColor color) const {
+    Position kingPos{-1, -1};
+
+    for (int row = 0; row < 8; ++row) {
+        for (int col = 0; col < 8; ++col) {
+            Piece piece = board[row][col];
+            if (piece.getType() == PieceType::King && piece.getColor() == color) {
+                kingPos = Position{row, col};
+            }
+        }
+    }
+
+    if (!isValidPositionInBoard(kingPos))
+        return false;
+
+    PieceColor opponent = (color == PieceColor::White) ? PieceColor::Black : PieceColor::White;
+    return isSquareUnderAttack(kingPos, opponent);
+}

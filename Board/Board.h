@@ -34,6 +34,7 @@ public:
     void makeMove(Move move);
     bool canPromoteAt(Position square) const;
     bool promotePawn(Position square, PieceType newType);
+    bool isInCheck(PieceColor color) const;
 };
 
 #endif
